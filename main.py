@@ -72,4 +72,4 @@ async def leave(interaction: discord.Interaction):
         await interaction.guild.voice_client.disconnect()
         await interaction.response.send_message("👋 고생했어!")
 
-bot.run('MTQ5OTgzMjc4MDM4MzU4ODQ4NA.G-JCEC.Ijxxe9HJ68TqUCRYpJCgGyLR50-j5aJe8lWJd4')
+bot.run('YOUR_TOKEN')
