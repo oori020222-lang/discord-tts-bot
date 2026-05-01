@@ -19,6 +19,7 @@ def clean_text(text):
     text = text.replace("ㅇㅋ", " 오키 ")
     text = text.replace("ㄱㄱ", " 고고 ")
     text = text.replace("ㅂㅇ", " 바이 ")
+    text = text.replace("ㅎㅇ", " 하이 ")
     text = text.replace("ㅎㄷㄷ", " 후덜덜 ")
 
     # 2. 한 글자씩 반복되는 초성 처리 (ㅋㅋㅋㅋ -> 크크크크)
