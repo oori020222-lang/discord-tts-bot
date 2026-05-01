@@ -17,7 +17,7 @@ def clean_text(text):
     # 뒤에 공백을 살짝 넣어서 단어끼리 붙어있어도 잘 인식하게 했어
     text = text.replace("ㄹㅇ", " 레알 ").replace("ㅇㄷ", " 어디 ").replace("ㅇㅋ", " 오키 ")
     text = text.replace("ㄱㄱ", " 고고 ").replace("ㅂㅇ", " 바이 ").replace("ㅎㅇ", " 하이 ")
-    text = text.replace("ㅎㄷㄷ", " 후덜덜 ")
+    text = text.replace("ㅎㄷㄷ", " 후덜덜 ").replace("ㅁㅎ", " 뭐해 ")
 
     # 2. 한 글자씩 반복되는 초성 처리 (ㅋㅋㅋㅋ -> 크크크크)
     # 정규식 패턴을 더 꼼꼼하게 잡았어
