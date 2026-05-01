@@ -28,7 +28,7 @@ def clean_text(text):
     
     for char, sound in dic.items():
         # r'[char]+' 패턴으로 해당 글자가 연속될 때 모두 찾아서 발음으로 바꿔줘
-        text = re.sub(f'{char}+', lambda m: sound * len(m.group()), text)
+        text = re.sub(f'{char}+', lambda m: sound * len(m.group()), 4), text)
     
     # 마지막으로 앞뒤 불필요한 공백만 정리
     return text.strip()
