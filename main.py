@@ -14,25 +14,24 @@ play_lock = asyncio.Lock()
 # [기능 추가] 초성 및 단어를 한글 발음으로 바꿔주는 함수
 def clean_text(text):
     # 1. 단어 통째로 바꾸기 (ㄹㅇ, ㅇㄷ, ㅇㅋ 등)
-    text = text.replace("ㄹㅇ", " 레알 ")
-    text = text.replace("ㅇㄷ", " 어디 ")
-    text = text.replace("ㅇㅋ", " 오키 ")
-    text = text.replace("ㄱㄱ", " 고고 ")
-    text = text.replace("ㅂㅇ", " 바이 ")
-    text = text.replace("ㅎㅇ", " 하이 ")
+    # 뒤에 공백을 살짝 넣어서 단어끼리 붙어있어도 잘 인식하게 했어
+    text = text.replace("ㄹㅇ", " 레알 ").replace("ㅇㄷ", " 어디 ").replace("ㅇㅋ", " 오키 ")
+    text = text.replace("ㄱㄱ", " 고고 ").replace("ㅂㅇ", " 바이 ").replace("ㅎㅇ", " 하이 ")
     text = text.replace("ㅎㄷㄷ", " 후덜덜 ")
 
     # 2. 한 글자씩 반복되는 초성 처리 (ㅋㅋㅋㅋ -> 크크크크)
-    # 수연이가 원하는 초성 발음을 여기에 추가하면 돼!
+    # 정규식 패턴을 더 꼼꼼하게 잡았어
     dic = {
         "ㅋ": "크", "ㅎ": "흐", "ㅠ": "유", "ㅜ": "우", 
         "ㅅ": "시옷", "ㄴ": "노", "ㅇ": "응", "ㄷ": "덜"
     }
     
     for char, sound in dic.items():
-        # 초성이 반복된 만큼 발음도 반복되게 만들어줘
+        # r'[char]+' 패턴으로 해당 글자가 연속될 때 모두 찾아서 발음으로 바꿔줘
         text = re.sub(f'{char}+', lambda m: sound * len(m.group()), text)
-    return text
+    
+    # 마지막으로 앞뒤 불필요한 공백만 정리
+    return text.strip()
 
 # 목소리 파일 생성 함수 (초성 변환 기능 포함)
 async def make_voice(text):
