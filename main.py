@@ -16,7 +16,7 @@ def clean_text(text):
     # 1. 단어 통째로 바꾸기 (원래 네가 쓴 방식 그대로!)
     text = text.replace("ㄹㅇ", " 레알 ").replace("ㅇㄷ", " 어디 ").replace("ㅇㅋ", " 오키 ")
     text = text.replace("ㄱㄱ", " 고고 ").replace("ㅂㅇ", " 바이 ").replace("ㅎㅇ", " 하이 ")
-    text = text.replace("ㅎㄷㄷ", " 후덜덜 ").replace("ㅁㅎ", " 뭐해 ")
+    text = text.replace("ㅎㄷㄷ", " 후덜덜 ").replace("ㅁㅎ", " 뭐해 ").replace("ㄱㅊ", " 괜찮 ")
 
     # 2. 한 글자씩 반복되는 초성 처리 (최대 4개 제한 로직 추가)
     dic = {
