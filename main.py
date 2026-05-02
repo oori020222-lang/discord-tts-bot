@@ -17,12 +17,13 @@ def clean_text(text):
     text = text.replace("ㄹㅇ", " 레알 ").replace("ㅇㄷ", " 어디 ").replace("ㅇㅋ", " 오키 ")
     text = text.replace("ㄱㄱ", " 고고 ").replace("ㅂㅇ", " 바이 ").replace("ㅎㅇ", " 하이 ")
     text = text.replace("ㅎㄷㄷ", " 후덜덜 ").replace("ㅁㅎ", " 뭐해 ").replace("ㄱㅊ", " 괜찮 ")
-     text = text.replace("ㅅㅂ", " 시발 ")
+
 
     # 2. 한 글자씩 반복되는 초성 처리 (최대 4개 제한 로직 추가)
     dic = {
         "ㅋ": "크", "ㅎ": "흐", "ㅠ": "유", "ㅜ": "우", 
-        "ㅅ": "샤", "ㄴ": "노", "ㅇ": "응", "ㄷ": "덜"
+        "ㅅ": "샤", "ㄴ": "노", "ㅇ": "응", "ㄷ": "덜",
+        "ㅂ": "발"
     }
     
     for char, sound in dic.items():
