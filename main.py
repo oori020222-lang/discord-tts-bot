@@ -4,7 +4,7 @@ import edge_tts
 import asyncio
 import os
 import time
-import re  # [추가] 초성을 찾아서 바꿔주기 위해 필요해!
+import re
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
@@ -13,29 +13,25 @@ play_lock = asyncio.Lock()
 
 # [기능 추가] 초성 및 단어를 한글 발음으로 바꿔주는 함수
 def clean_text(text):
-    # 1. 단어 통째로 바꾸기 (ㄹㅇ, ㅇㄷ, ㅇㅋ 등)
-    # 뒤에 공백을 살짝 넣어서 단어끼리 붙어있어도 잘 인식하게 했어
+    # 1. 단어 통째로 바꾸기 (원래 네가 쓴 방식 그대로!)
     text = text.replace("ㄹㅇ", " 레알 ").replace("ㅇㄷ", " 어디 ").replace("ㅇㅋ", " 오키 ")
     text = text.replace("ㄱㄱ", " 고고 ").replace("ㅂㅇ", " 바이 ").replace("ㅎㅇ", " 하이 ")
     text = text.replace("ㅎㄷㄷ", " 후덜덜 ").replace("ㅁㅎ", " 뭐해 ")
 
-    # 2. 한 글자씩 반복되는 초성 처리 (ㅋㅋㅋㅋ -> 크크크크)
-    # 정규식 패턴을 더 꼼꼼하게 잡았어
+    # 2. 한 글자씩 반복되는 초성 처리 (최대 4개 제한 로직 추가)
     dic = {
         "ㅋ": "크", "ㅎ": "흐", "ㅠ": "유", "ㅜ": "우", 
-        "ㅅ": "시옷", "ㄴ": "노", "ㅇ": "응", "ㄷ": "덜"
+        "ㅅ": "샤", "ㄴ": "노", "ㅇ": "응", "ㄷ": "덜"
     }
     
     for char, sound in dic.items():
-        # r'[char]+' 패턴으로 해당 글자가 연속될 때 모두 찾아서 발음으로 바꿔줘
-        text = re.sub(f'{char}+', lambda m: sound * len(m.group()), 4), text)
+        # [오타 수정] 괄호 닫는 위치를 정확히 맞췄고, 4개까지만 소리나게 했어!
+        text = re.sub(f'{char}+', lambda m: sound * min(len(m.group()), 4), text)
     
-    # 마지막으로 앞뒤 불필요한 공백만 정리
     return text.strip()
 
 # 목소리 파일 생성 함수 (초성 변환 기능 포함)
 async def make_voice(text):
-    # [수정] 말하기 전에 글자를 먼저 깨끗하게 바꿈!
     processed_text = clean_text(text)
     
     fname = f"voice_{int(time.time() * 1000)}.mp3"
@@ -52,11 +48,9 @@ async def on_ready():
 @bot.event
 async def on_voice_state_update(member, before, after):
     if member.bot: return
-
     vc = member.guild.voice_client
     if not vc: return
 
-    # 1. 누군가 봇이 있는 채널로 들어왔을 때 (입장 알림)
     if before.channel != after.channel and after.channel == vc.channel:
         async with play_lock: 
             text = f"{member.display_name}님이 들어오셨어요. 반가워요!"
@@ -66,10 +60,8 @@ async def on_voice_state_update(member, before, after):
                 vc.play(discord.FFmpegPCMAudio(current_file), after=lambda e: os.remove(current_file) if os.path.exists(current_file) else None)
                 while vc.is_playing(): await asyncio.sleep(0.1)
 
-    # 2. 누군가 채널에서 나갔을 때 (퇴장 알림 & 자동 퇴장 체크)
     elif before.channel == vc.channel and after.channel != vc.channel:
         remaining_members = [m for m in vc.channel.members if not m.bot]
-        
         if not remaining_members: 
             await asyncio.sleep(1)
             await vc.disconnect()
@@ -87,10 +79,8 @@ async def on_voice_state_update(member, before, after):
 @bot.event
 async def on_message(message):
     if message.author.bot: return
-    
     if message.author.voice:
         vc = message.guild.voice_client
-        
         if not vc:
             vc = await message.author.voice.channel.connect()
         elif vc.channel != message.author.voice.channel:
@@ -123,5 +113,3 @@ async def leave(interaction: discord.Interaction):
 token = os.getenv('DISCORD_TOKEN')
 if token:
     bot.run(token)
-else:
-    print("에러: DISCORD_TOKEN을 찾을 수 없습니다.")
