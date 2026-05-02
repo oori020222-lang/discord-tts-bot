@@ -30,13 +30,18 @@ def clean_text(text, guild=None):
     if re.search(r'<a?:\w+:\d+>', text):
         text = re.sub(r'<a?:\w+:\d+>', ' 이모지 ', text)
 
-    # 4. 단어 통째로 바꾸기
+ # 4. 단어 통째로 바꾸기 (긴 단어부터 위로!)
+    # 선희가 세 글자 단어를 먼저 찾게 순서를 바꿨어.
+    text = text.replace("ㄱㅇㄷ", " 개이득 ") # 이걸 제일 위로!
+    text = text.replace("ㅇㅈㄹ", " 이지랄 ")
+    text = text.replace("ㅎㄷㄷ", " 후덜덜 ")
+
+    # 그다음 두 글자 단어들 처리
     text = text.replace("ㄹㅇ", " 레알 ").replace("ㅇㄷ", " 어디 ").replace("ㅇㅋ", " 오키 ")
     text = text.replace("ㄱㄱ", " 고고 ").replace("ㅂㅇ", " 바이 ").replace("ㅎㅇ", " 하이 ")
-    text = text.replace("ㅎㄷㄷ", " 후덜덜 ").replace("ㅁㅎ", " 뭐해 ").replace("ㄱㅇㄷ", " 개이득 ")
-    text = text.replace("ㅈㄴ", " 존나 ").replace("ㅇㅈㄹ", " 이지랄 ").replace("ㅈㄹ", " 지랄 ")
+    text = text.replace("ㅁㅎ", " 뭐해 ").replace("ㅈㄴ", " 존나 ").replace("ㅈㄹ", " 지랄 ")
     text = text.replace("ㅇㅈ", " 인정 ").replace("ㅇㅎ", " 아하 ")
-
+    
     # 5. 한 글자씩 반복되는 초성 처리 (최대 4개 제한)
     dic = {
         "ㅋ": "크", "ㅎ": "흐", "ㅠ": "유", "ㅜ": "우", 
